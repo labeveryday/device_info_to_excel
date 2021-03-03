@@ -53,9 +53,20 @@ pip install -r requirements.txt
 
 ## Example: Script in action
 
-Now that you have everything installed you can execute the script
-
 ![Lab](https://github.com/labeveryday/Notes/blob/main/images/cml.png)
+
+Before executing your script you must update your device ip address list in the `device_info/ip_file.txt` file. This will be the list of ip addresses that will be used in the script.
+
+```bash
+192.168.23.142
+192.168.23.143
+192.168.23.144
+192.168.23.145
+192.168.23.146
+192.168.23.147
+```
+
+Now that you have everything installed and updated you can execute the script
 
 ```bash
 (venv) duan@ubuntu device_info_to_excel$ python main.py
