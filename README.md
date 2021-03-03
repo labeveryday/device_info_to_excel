@@ -57,6 +57,8 @@ Now that you have everything installed you can execute the script
 
 ```bash
 (venv) duan@ubuntu device_info_to_excel$ python main.py
+Username: duan
+Password: 
 
 Attempting to ping 192.168.23.145.....
 Ping successsful!!!!
