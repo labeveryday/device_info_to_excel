@@ -1,6 +1,6 @@
 # device_info_to_excel
 
-This is a script that leverages [netmiko](https://github.com/ktbyers/netmiko) to gather Cisco device info and then output the results to an excel spreadsheet. Use this script to improve your understanding of python. While also learning how to leverage network automation to update your network documentation.
+This is a script that leverages [netmiko](https://github.com/ktbyers/netmiko) to gather Cisco device info. The script then outputs the results to an excel spreadsheet. Use this script to improve your understanding of python. While also learning how to leverage network automation to update your network documentation.
 
 **Gathers**:
 
@@ -55,6 +55,8 @@ pip install -r requirements.txt
 
 Now that you have everything installed you can execute the script
 
+![Lab](https://github.com/labeveryday/Notes/blob/main/images/cml.png)
+
 ```bash
 (venv) duan@ubuntu device_info_to_excel$ python main.py
 Username: duan
@@ -82,7 +84,7 @@ After the script successfully pulls data from the devices the `inventory.xlsx` f
 
 > NOTE: With the python xlsxwriter there is no way to append to a workbook. Each time the script is executed the `inventory.xlsx` file will be recreated.
 
-![Lab](https://github.com/labeveryday/Notes/blob/main/images/cml.png)
+![excel](https://github.com/labeveryday/Notes/blob/main/images/device_excel.png)
 
 ### About me
 
