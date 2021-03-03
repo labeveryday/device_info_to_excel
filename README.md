@@ -44,17 +44,40 @@ example listed below. It will installed the required libraries for this specific
 pip install -r requirements.txt
 ```
 
-## Execute the script
+## Example: Script in action
 
 Now that you have everything installed you can execute the script
 
 ```bash
-python main.py
+(venv) duan@ubuntu device_info_to_excel$ python main.py
+
+Attempting to ping 192.168.23.145.....
+Ping successsful!!!!
+Now connecting to: 192.168.23.145
+
+Device Hostname: R1-CSR1000v
+------ Uptime:   21 minutes
+------ Serial:   9O840KC3ZG2
+------ Version:  17.3.1a
+
+----------------------------------------
+
+Attempting to ping 192.168.23.146.....
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+Down 192.168.23.146 ---- Ping Unsuccessful 😔
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+----------------------------------------
 ```
+
+After the script successfully pulls data from the devices the `inventory.xlsx` file will be updated accordingly.
+
+> NOTE: With the python xlsxwriter there is no way to append to a workbook. Each time the script is executed the `inventory.xlsx` file will be recreated.
+
+
 
 ### About me
 
-Introverted Network Automation Engineer that is changing lives as a Developer Advocate for Cisco DevNet. Pythons scripts are delicious. Especially at 2am on a Saturday night. 
+Introverted Network Automation Engineer that is changing lives as a Developer Advocate for Cisco DevNet. Pythons scripts are delicious. Especially at 2am on a Saturday night.
 
 My hangouts:
 

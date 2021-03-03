@@ -1,0 +1,6 @@
+Up 192.168.23.142 Ping successful
+Up 192.168.23.143 Ping successful
+Up 192.168.23.144 Ping successful
+Up 192.168.23.145 Ping successful
+Up 192.168.23.146 Ping successful
+Up 192.168.23.147 Ping successful

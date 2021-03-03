@@ -1,11 +1,15 @@
 #!/usr/bin/env python
+import datetime
 import getpass
-import os
 import re
+import subprocess
 import xlsxwriter
 from netmiko import ConnectHandler
 from pathlib import Path
 
+
+# Enter today's date into a variable
+today = f"{datetime.datetime.now():%Y-%m-%d}"
 
 # Map the device info directory
 data_folder = Path("./device_info/")
@@ -15,22 +19,29 @@ data_folder = Path("./device_info/")
 ip_list = []
 
 # Read ip addresses from the ip_file.txt and add to ip_list
-with open((data_folder / "ip_file.txt"), "r") as file:
+with open(data_folder / "ip_file.txt", "r") as file:
     for address in file:
         ip_list.append(address.split('\n')[0])
 
-# Open the inventory spreadsheet and add the device info
-workbook = xlsxwriter.Workbook((data_folder / "inventory.xlsx"))
-worksheet = workbook.add_worksheet('updated')
-bold = workbook.add_format({'bold': True})
-worksheet.write("A1", 'Hostname', bold)
-worksheet.write("B1", 'IP Address', bold)
-worksheet.write("C1", 'Serial Number', bold)
-worksheet.write("D1", 'IOS Version', bold)
-worksheet.write("E1", 'Uptime', bold)
+# Create a new workbook if not there
+workbook = xlsxwriter.Workbook(data_folder / "inventory.xlsx")
+# Create a new worksheet in the working book title `updated today's date1`
+worksheet = workbook.add_worksheet(f"updated {today}")
+# Create bold titled columns in the worksheet
+bold = workbook.add_format({"bold": True})
+worksheet.write("A1", "Hostname", bold)
+worksheet.write("B1", "IP Address", bold)
+worksheet.write("C1", "Serial Number", bold)
+worksheet.write("D1", "IOS Version", bold)
+worksheet.write("E1", "Running Image", bold)
+worksheet.write("F1", "Hardware", bold)
+worksheet.write("G1", "Uptime", bold)
+# Set the width of columns A:G to 20
+worksheet.set_column(0, 6, 20)
+
 
 # Open results.txt file
-results_file = open((data_folder /"results.txt", "w"))
+results_file = open(data_folder /"results.txt", "w")
 
 # Start with 2 to enter the 2nd row of the spreadsheet and increment
 i = 2
@@ -45,35 +56,32 @@ device_type = 'cisco_ios'
 # Output results to inventory.xlsx
 # Outputs to results.txt file
 for ip in ip_list:
-    response = os.popen(f"ping {ip} -n 1").read()
-    if "Received = 1" and "Approximate" in response:
-        print('\nPing successsful.\nNow connecting to: ', ip)
+    response = subprocess.run(["ping", ip, "-c", "1"], stdout=subprocess.DEVNULL,
+                              stderr=subprocess.DEVNULL)
+    print(f"\nAttempting to ping {ip}.....")
+    if response.returncode == 0:
+        print(f'Ping successsful!!!!\nNow connecting to: {ip}\n')
         net_connect = ConnectHandler(ip=ip, username=username,
                                      password=password,
                                      device_type=device_type)
-        hostname = net_connect.send_command('show run | in hostname')[9:]
-        version = net_connect.send_command('sh version | in System image |Cisco_IOS')
-        uptime = net_connect.send_command('sh version | in uptime').split('is ')[1]
-        image_version = re.search(r'System image file is .*', version).group()
-        serial = net_connect.send_command('sh inventory | in PID')
-        device_serial = re.search(r'SN: \w\w\w\w\w\w\w\w\w\w\w', serial).group()
-        print(f'Backing up {hostname} config........')
-        with open(f'.\\device_configs\\{hostname}.txt', 'w') as outf:
-            outf.writelines(running_config)
-        print(uptime)
-        print(device_serial)
-        print(image_version.split('"')[1], end=('\n\n'))
+        device_info = net_connect.send_command('show version', use_textfsm=True)[0]
+        print(f"Device Hostname: {device_info['hostname']}")
+        print(f"------ Uptime:   {device_info['uptime']}")
+        print(f"------ Serial:   {device_info['serial'][0]}")
+        print(f"------ Version:  {device_info['version']}", end=('\n\n'))
         print('-' * 40)
-        worksheet.write(f"A{i}", hostname)
+        worksheet.write(f"A{i}", device_info['hostname'])
         worksheet.write(f"B{i}", ip)
-        worksheet.write(f"C{i}", device_serial)
-        worksheet.write(f"D{i}", image_version.split('"')[1])
-        worksheet.write(f"E{i}", uptime)
+        worksheet.write(f"C{i}", device_info['serial'][0])
+        worksheet.write(f"D{i}", device_info['version'])
+        worksheet.write(f"E{i}", device_info['running_image'])
+        worksheet.write(f"F{i}", device_info['hardware'][0])
+        worksheet.write(f"G{i}", device_info['uptime'])
         results_file.write(f"Up {ip} Ping successful" + "\n")
         i+=1
     else:
         print('!' * 40)
-        print(f"Down {ip} Ping Unsuccessful")
+        print(f"Down {ip} ---- Ping Unsuccessful 😔")
         print('!' * 40)
         results_file.write(f"Down {ip} Ping Unsuccessful" + "\n")
         print('-' * 40)
