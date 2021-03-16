@@ -1,5 +1,7 @@
 # device_info_to_excel, use this script to gather Cisco device info
 
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/labeveryday/device_info_to_excel)
+
 This is a script that leverages [netmiko](https://github.com/ktbyers/netmiko) to gather Cisco device info. The script then outputs the results to an excel spreadsheet. Use this script to improve your understanding of python. While also learning how to leverage network automation to update your network documentation. Another note, if you need access to a lab environment you can have free access to the [Cisco DevNet Always-On Sandbox](https://devnetsandbox.cisco.com/RM/Diagram/Index/e83cfd31-ade3-4e15-91d6-3118b867a0dd?diagramType=Topology)
 
 **Gathers**:
