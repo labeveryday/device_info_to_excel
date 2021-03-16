@@ -23,7 +23,6 @@ from pathlib import Path
 import xlsxwriter
 from netmiko import ConnectHandler
 
-
 # Enter today's date into a variable
 today = f"{datetime.datetime.now():%Y-%m-%d}"
 
